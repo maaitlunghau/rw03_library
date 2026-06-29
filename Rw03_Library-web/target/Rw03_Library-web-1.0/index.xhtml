@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                template="./WEB-INF/layout/library-layout.xhtml">
+
+    <ui:define name="title">Library cards | Library Cards</ui:define>
+
+    <ui:define name="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">Library cards</h3>
+            <h:link outcome="create" value="Create new card" styleClass="btn btn-primary"/>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Card list: #{libraryManaged.libCards.size()} records
+            </div>
+            <div class="card-body p-0">
+                <h:panelGroup rendered="#{not empty libraryManaged.libCards}">
+                    <div class="table-responsive">
+                        <h:form id="cardListForm">
+                            <h:dataTable value="#{libraryManaged.libCards}"
+                                         var="item"
+                                         styleClass="table table-striped table-hover align-middle mb-0">
+                                <h:column>
+                                    <f:facet name="header">Card No</f:facet>
+                                    #{item.cardno}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Student No</f:facet>
+                                    #{item.studentNo.stdno}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Student Name</f:facet>
+                                    #{item.studentNo.name}
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Issue Date</f:facet>
+                                    <h:outputText value="#{item.issueDate}">
+                                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                    </h:outputText>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Expiry Date</f:facet>
+                                    <h:outputText value="#{item.expiryDate}">
+                                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                    </h:outputText>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Status</f:facet>
+                                    <h:panelGroup rendered="#{item.status}" styleClass="badge text-bg-success status-badge">
+                                        Active
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{not item.status}" styleClass="badge text-bg-secondary status-badge">
+                                        Inactive
+                                    </h:panelGroup>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Action</f:facet>
+                                    <h:commandButton value="#{item.status ? 'Deactivate' : 'Activate'}"
+                                                     action="#{libraryManaged.changeStatus(item)}"
+                                                     styleClass="btn btn-outline-primary btn-sm"/>
+                                </h:column>
+                            </h:dataTable>
+                        </h:form>
+                    </div>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{empty libraryManaged.libCards}">
+                    <div class="p-4 text-center text-muted">
+                        No library cards yet.
+                    </div>
+                </h:panelGroup>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
